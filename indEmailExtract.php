@@ -1,5 +1,6 @@
 <?php
     
+	//Regular expression function that scans individual pages for emails
     function get_emails_from_webpage($url)
     {
       $text=file_get_contents($url);
@@ -11,11 +12,16 @@
           return null;
       }
     }
+
+//URL Array
 $URLArray = array();
    
+//Inputted URL right now it just pulls it from a GET variable but you can do alter this any way you want
 $inputtedURL = $_GET['url'];
-$urlContent = file_get_contents("http://".urldecode($inputtedURL));
 
+
+//Crawling the inputted domain to get the URLS
+$urlContent = file_get_contents("http://".urldecode($inputtedURL));
 $dom = new DOMDocument();
 @$dom->loadHTML($urlContent);
 $xpath = new DOMXPath($dom);
@@ -37,7 +43,7 @@ for($i = 0; $i < $hrefs->length; $i++){
     }
 }
 
-
+//Extracting the emails from URLS that were crawled
 foreach ($URLArray as $key => $url) {
     $emails = get_emails_from_webpage($url);
 
@@ -50,6 +56,8 @@ foreach ($URLArray as $key => $url) {
     } 
 }
 
+
+//Ouputting the scraped emails in addition to the the number of URLS crawled
 foreach($scrapedEmails as $value) {
 	echo $value . " " . count($URLArray);
 }
